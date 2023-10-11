@@ -12,3 +12,12 @@
  * @brief
  *
  **/
+
+#include "main.h"
+#include "i2c.h"
+#include "usart.h"
+#include "gpio.h"
+
+void mpu9250Init (void) {
+	
+}
