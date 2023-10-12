@@ -102,7 +102,10 @@ int main(void)
 	bmp280Struct_t bmp;
 	bmp280GetCalib(&bmp);
 	bmp280GetTemperature(&bmp);
-	printf("temperature = %d", bmp.temperature);
+	bmp280GetPressure(&bmp);
+	BMP280_S32_t temp = bmp280CompensateTInt32(bmp);
+	BMP280_S32_t press = bmp280CompensatePInt32(bmp);
+	printf("Temperature = %.2f C, Pressure = %.2f Pa", (float)temp/100, (float)press/256);
   /* USER CODE END 2 */
 
   /* Infinite loop */
