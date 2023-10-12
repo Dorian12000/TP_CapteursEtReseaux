@@ -138,3 +138,17 @@ BMP280_S32_t bmp280CompensatePInt32(bmp280Struct_t adc) {
 
 	return p * 1000U;
 }
+
+float bmp280GetCompensateTemp(void) {
+	bmp280Struct_t dev;
+	bmp280GetCalib(&dev);
+	bmp280GetTemperature(&dev);
+	return bmp280CompensateTInt32(dev)/100;
+}
+
+float bmp280GetCompensatePress(void) {
+	bmp280Struct_t dev;
+	bmp280GetCalib(&dev);
+	bmp280GetPressure(&dev);
+	return bmp280CompensatePInt32(dev)/256;
+}

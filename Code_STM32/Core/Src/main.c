@@ -21,14 +21,12 @@
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
-#include "log/logger.h"
-
-#include "MPU9250/MPU9250_register.h"
-#include "BMP280/drv_BMP280.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "BMP280/drv_BMP280.h"
+#include "shell.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,25 +91,28 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_USART2_UART_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   printf("=======================init done======================");
+	Shell_Init();
 	uint8_t id;
 	bmp280GetId(&id);
-	printf("id = Ox%02X", id);
+	printf("bmp id = Ox%02X", id);
 	bmp280Config();
 	bmp280Struct_t bmp;
 	bmp280GetCalib(&bmp);
-	bmp280GetTemperature(&bmp);
+	/*bmp280GetTemperature(&bmp);
 	bmp280GetPressure(&bmp);
 	BMP280_S32_t temp = bmp280CompensateTInt32(bmp);
 	BMP280_S32_t press = bmp280CompensatePInt32(bmp);
-	printf("Temperature = %.2f C, Pressure = %.2f Pa", (float)temp/100, (float)press/256);
+	printf("Temperature = %.2f C, Pressure = %.2f Pa", (float)temp/100, (float)press/256);*/
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	Shell_Loop();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

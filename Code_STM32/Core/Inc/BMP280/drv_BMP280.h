@@ -28,3 +28,5 @@ uint8_t bmp280GetTemperature(bmp280Struct_t *bmp);
 uint8_t bmp280GetPressure(bmp280Struct_t *bmp);
 BMP280_S32_t bmp280CompensateTInt32(bmp280Struct_t adc);
 BMP280_S32_t bmp280CompensatePInt32(bmp280Struct_t adc);
+float bmp280GetCompensateTemp(void);
+float bmp280GetCompensatePress(void);
