@@ -20,11 +20,14 @@
 #include "BMP280/drv_BMP280.h"
 #include "shell.h"
 
-uint8_t prompt[]="user@Nucleo-STM32G474RET6>>";
+uint8_t prompt[]="user@Nucleo-STM32F446>>";
 uint8_t cmdNotFound[]="Command not found\r\n";
+uint8_t brian[]="Brian is in the kitchen\r\n";
 uint8_t newline[]="\r\n";
 uint8_t backspace[]="\b \b";
 uint8_t uartRxReceived;
+uint8_t uartRxBufferRasp[UART_RX_BUFFER_SIZE];
+uint8_t uartRxBufferPC[UART_RX_BUFFER_SIZE];
 uint8_t uartRxBuffer[UART_RX_BUFFER_SIZE];
 uint8_t uartTxBuffer[UART_TX_BUFFER_SIZE];
 
@@ -39,10 +42,12 @@ void Shell_Init(void){
 	memset(argv, NULL, MAX_ARGS*sizeof(char*));
 	memset(cmdBuffer, NULL, CMD_BUFFER_SIZE*sizeof(char));
 	memset(uartRxBuffer, NULL, UART_RX_BUFFER_SIZE*sizeof(char));
+	memset(uartRxBufferRasp, NULL, UART_RX_BUFFER_SIZE*sizeof(char));
+	memset(uartRxBufferPC, NULL, UART_RX_BUFFER_SIZE*sizeof(char));
 	memset(uartTxBuffer, NULL, UART_TX_BUFFER_SIZE*sizeof(char));
 
-	HAL_UART_Receive_IT(&huart2, uartRxBuffer, UART_RX_BUFFER_SIZE);
-	HAL_UART_Receive_IT(&huart1, uartRxBuffer, UART_RX_BUFFER_SIZE);
+	HAL_UART_Receive_IT(&huart2, uartRxBufferPC, UART_RX_BUFFER_SIZE);
+	HAL_UART_Receive_IT(&huart1, uartRxBufferRasp, UART_RX_BUFFER_SIZE);
 	HAL_UART_Transmit(&huart2, prompt, strlen((char *)prompt), HAL_MAX_DELAY);
 	HAL_UART_Transmit(&huart1, prompt, strlen((char *)prompt), HAL_MAX_DELAY);
 }
@@ -78,8 +83,10 @@ void Shell_Loop(void){
 	}
 
 	if(newCmdReady){
-		char uartTxBuffer[100];
-		if(strcmp(argv[0],"GET_T")==0){
+		if(strcmp(argv[0],"WhereisBrian?")==0){
+			HAL_UART_Transmit(&huart2, brian, sizeof(brian), HAL_MAX_DELAY);
+		}
+		else if(strcmp(argv[0],"GET_T")==0){
 			BMP280_S32_t temp = bmp280GetCompensateTemp();
 			sprintf(uartTxBuffer, "T = %ld_C\n\r", temp);
 			HAL_UART_Transmit(&huart2, uartTxBuffer, sizeof(uartTxBuffer), HAL_MAX_DELAY);
@@ -87,7 +94,7 @@ void Shell_Loop(void){
 		}
 		else if(strcmp(argv[0],"GET_P")==0){
 			BMP280_S32_t press = bmp280GetCompensatePress();
-			sprintf(uartTxBuffer, "P = %ldPa\n\r", press);
+			sprintf(uartTxBuffer, "P = %ld Pa\n\r", press);
 			HAL_UART_Transmit(&huart2, uartTxBuffer, sizeof(uartTxBuffer), HAL_MAX_DELAY);
 			HAL_UART_Transmit(&huart1, uartTxBuffer, sizeof(uartTxBuffer), HAL_MAX_DELAY);
 		}
@@ -102,7 +109,7 @@ void Shell_Loop(void){
 		}
 		else{
 			HAL_UART_Transmit(&huart2, cmdNotFound, sizeof(cmdNotFound), HAL_MAX_DELAY);
-			HAL_UART_Transmit(&huart1, cmdNotFound, sizeof(cmdNotFound), HAL_MAX_DELAY);
+			//HAL_UART_Transmit(&huart1, cmdNotFound, sizeof(cmdNotFound), HAL_MAX_DELAY);
 		}
 		HAL_UART_Transmit(&huart2, prompt, sizeof(prompt), HAL_MAX_DELAY);
 		HAL_UART_Transmit(&huart1, prompt, sizeof(prompt), HAL_MAX_DELAY);
@@ -111,7 +118,13 @@ void Shell_Loop(void){
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart){
+	if(huart->Instance == USART1) {
+		uartRxBuffer[0] = uartRxBufferRasp[0];
+		HAL_UART_Receive_IT(&huart1, uartRxBufferRasp, UART_RX_BUFFER_SIZE);
+	}
+	else if(huart->Instance == USART2) {
+		uartRxBuffer[0] = uartRxBufferPC[0];
+		HAL_UART_Receive_IT(&huart2, uartRxBufferPC, UART_RX_BUFFER_SIZE);
+	}
 	uartRxReceived = 1;
-	HAL_UART_Receive_IT(&huart1, uartRxBuffer, UART_RX_BUFFER_SIZE);
-	HAL_UART_Receive_IT(&huart2, uartRxBuffer, UART_RX_BUFFER_SIZE);
 }

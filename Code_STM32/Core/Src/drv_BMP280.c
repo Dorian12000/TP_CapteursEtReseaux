@@ -80,7 +80,6 @@ uint8_t bmp280GetPressure(bmp280Struct_t *bmp) {
 	if(HAL_I2C_Master_Receive(&hi2c1, BMP280_ADRESS, buf, 3, HAL_MAX_DELAY) != HAL_OK) {
 		return 1;
 	}
-	printf("P: Ox[%02X %02X %02X]", buf[2], buf[1], buf[0]);
 	bmp->pressure = ((buf[0] << 12) | (buf[1] << 4) | (buf[2] >> 4));
 	return 0;
 }
