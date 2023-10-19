@@ -27,6 +27,7 @@
 #include "BMP280/drv_BMP280.h"
 #include "shell.h"
 #include <stdio.h>
+#include "log/logger.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
