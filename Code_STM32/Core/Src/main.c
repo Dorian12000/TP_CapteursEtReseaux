@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "can.h"
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
@@ -28,6 +29,7 @@
 #include "shell.h"
 #include <stdio.h>
 #include "log/logger.h"
+#include "motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,15 +95,21 @@ int main(void)
   MX_I2C1_Init();
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
+  MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
   printf("=======================init done======================");
 	Shell_Init();
+	HAL_CAN_Start(&hcan1);
+	motorInit();
 	uint8_t id;
-	bmp280GetId(&id);
-	printf("bmp id = Ox%02X", id);
+	if(bmp280GetId(&id) != 0) 
+		printf("bmp280GetId error");
+	else
+		printf("bmp id = Ox%02X", id);
 	bmp280Config();
 	bmp280Struct_t bmp;
 	bmp280GetCalib(&bmp);
+	motorSetPosition(90, 1);
 	/*bmp280GetTemperature(&bmp);
 	bmp280GetPressure(&bmp);
 	BMP280_S32_t temp = bmp280CompensateTInt32(bmp);

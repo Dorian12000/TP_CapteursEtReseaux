@@ -64,18 +64,4 @@
 #define LOG_CONSOLE_ERROR(message, x...)	console_logger(LOGTYPE_ERROR, STRING_LEVEL_ERROR, COLOR_RED, "Console", __FILE__, __func__, message, ## x)
 #define LOG_CONSOLE_WARN(message, x...)		console_logger(LOGTYPE_WARN, STRING_LEVEL_WARN, COLOR_YELLOW, "Console", __FILE__, __func__, message, ## x)
 
-#define LOG_RTOS_ENTER()				console_logger(LOGTYPE_ENTER, STRING_LEVEL_ENTER, COLOR_WHITE, "RTOS", __FILE__, __func__, NULL)
-#define LOG_RTOS_EXIT()					console_logger(LOGTYPE_EXIT, STRING_LEVEL_EXIT, COLOR_WHITE, "RTOS", __FILE__, __func__, NULL)
-#define LOG_RTOS_DEBUG(message, x...)	console_logger(LOGTYPE_DEBUG, STRING_LEVEL_DEBUG, COLOR_WHITE, "RTOS", __FILE__, __func__, message, ## x)
-#define LOG_RTOS_INFO(message, x...) 	console_logger(LOGTYPE_INFO, STRING_LEVEL_INFO, COLOR_CYAN, "RTOS", __FILE__, __func__, message, ## x)
-#define LOG_RTOS_ERROR(message, x...)	console_logger(LOGTYPE_ERROR, STRING_LEVEL_ERROR, COLOR_RED, "RTOS", __FILE__, __func__, message, ## x)
-#define LOG_RTOS_WARN(message, x...)	console_logger(LOGTYPE_WARN, STRING_LEVEL_WARN, COLOR_YELLOW, "RTOS", __FILE__, __func__, message, ## x)
-
-#define LOG_LIDAR_ENTER()				console_logger(LOGTYPE_ENTER, STRING_LEVEL_ENTER, COLOR_WHITE, "LIDAR", __FILE__, __func__, NULL)
-#define LOG_LIDAR_EXIT()				console_logger(LOGTYPE_EXIT, STRING_LEVEL_EXIT, COLOR_WHITE, "LIDAR", __FILE__, __func__, NULL)
-#define LOG_LIDAR_DEBUG(message, x...)	console_logger(LOGTYPE_DEBUG, STRING_LEVEL_DEBUG, COLOR_WHITE, "LIDAR", __FILE__, __func__, message, ## x)
-#define LOG_LIDAR_INFO(message, x...) 	console_logger(LOGTYPE_INFO, STRING_LEVEL_INFO, COLOR_CYAN, "LIDAR", __FILE__, __func__, message, ## x)
-#define LOG_LIDAR_ERROR(message, x...)	console_logger(LOGTYPE_ERROR, STRING_LEVEL_ERROR, COLOR_RED, "LIDAR", __FILE__, __func__, message, ## x)
-#define LOG_LIDAR_WARN(message, x...)	console_logger(LOGTYPE_WARN, STRING_LEVEL_WARN, COLOR_YELLOW, "LIDAR", __FILE__, __func__, message, ## x)
-
 #endif /* INC_LOGGER_H_ */
