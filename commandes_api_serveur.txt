@@ -1,0 +1,6 @@
+curl -X POST -H "Content-Type: application/json" -d '{"sentence": "MA phrase"}' http://192.168.88.73:5000/api/welcome
+curl -X GET http://192.168.88.73:5000/api/welcome
+curl -X GET http://192.168.88.73:5000/api/welcome/2
+curl -X DELETE http://192.168.88.73:5000/api/welcome
+curl -X DELETE http://192.168.88.73:5000/api/welcome/2
+curl -X PUT -H "Content-Type: application/json" -d '{"word": "Elephant"}' http://192.168.88.73:5000/api/welcome/2
