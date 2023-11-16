@@ -94,10 +94,10 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_USART2_UART_Init();
-  MX_USART1_UART_Init();
   MX_CAN1_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  printf("=======================init done======================");
+  printf("=======================init done======================\n\r");
 	Shell_Init();
 	HAL_CAN_Start(&hcan1);
 	motorInit();
@@ -105,16 +105,16 @@ int main(void)
 	if(bmp280GetId(&id) != 0) 
 		printf("bmp280GetId error");
 	else
-		printf("bmp id = Ox%02X", id);
+		printf("bmp id = Ox%02X\n\r", id);
 	bmp280Config();
 	bmp280Struct_t bmp;
 	bmp280GetCalib(&bmp);
 	motorSetPosition(90, 1);
-	/*bmp280GetTemperature(&bmp);
+	bmp280GetTemperature(&bmp);
 	bmp280GetPressure(&bmp);
 	BMP280_S32_t temp = bmp280CompensateTInt32(bmp);
 	BMP280_S32_t press = bmp280CompensatePInt32(bmp);
-	printf("Temperature = %.2f C, Pressure = %.2f Pa", (float)temp/100, (float)press/256);*/
+	printf("Temperature = %.2f C, Pressure = %.2f Pa", (float)temp/100, (float)press/256);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -146,12 +146,11 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 16;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 8;
   RCC_OscInitStruct.PLL.PLLN = 336;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
   RCC_OscInitStruct.PLL.PLLQ = 2;

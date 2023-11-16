@@ -19,6 +19,7 @@ def api_welcome():
 @app.route('/api/welcome/<int:x>', methods=['GET','POST', 'PATCH', 'DELETE', 'PUT'])
 @app.route('/api/welcome', methods=['GET','POST', 'DELETE'])
 def api_welcome_index(index=None, x=None):
+	print(welcome)
 	resp = {
 		"method": request.method,
 		"url": request.url,
@@ -28,40 +29,28 @@ def api_welcome_index(index=None, x=None):
 		"x": None,
 	}
 
-	data = request.get_json()
-
 	if request.method == 'POST':
-		data = request.get_json()
-		if "sentence" in data:
-			resp["message"] = data["sentence"]
-			return jsonify(resp), 201 # Create
-		else:
-			return jsonify(message="Missing arg sentence"), 204
+		print('POST')
+		try:
+			data = request.get_json()
+			if "sentence" in data:
+				resp["message"] = data["sentence"]
+				return jsonify(resp), 201 # Create
+			else:
+				return jsonify(message="Missing arg sentence"), 204
+		except:
+			return jsonify(message="Error parsing JSON"), 400  # Bad Request
 	elif request.method == 'GET':
+		print('GET')
 		if x != None:
 			resp["x"] = x
 			resp["letter"] = resp["message"][x]
 			return jsonify(resp), 200
-		elif "commande" in data:
-			cmd = data["commande"]
-			resp["commande"] = cmd
-			if cmd == 'GET_T':
-				pass
-			elif cmd == 'GET_P':
-				pass
-			elif cmd == 'SET_K':
-				pass
-			elif cmd == 'GET_k':
-				pass
-			elif cmd == 'GET_A':
-				pass
-			else:
-				resp["message"] = "Commande incorecte"
-				return jsonify(resp)
 		else:
 			return jsonify(resp), 200
 	elif request.method == 'PUT':
 		print('PUT')
+		data = request.get_json()
 		if x != None and "word" in data:
 			resp["message"] = resp["message"][:x] + data["word"] + resp["message"][x:]
 			return jsonify(resp), 200
@@ -75,7 +64,7 @@ def api_welcome_index(index=None, x=None):
 		else:
 			return jsonify(message="Missing x"), 204
 	elif request.method == 'DELETE':
-		print('DELET')
+		print('DELETE')
 		if x != None:
 			resp["message"] = resp["message"][:x] + resp["message"][x + 1:]
 			return jsonify(resp), 200
